@@ -1,3 +1,5 @@
+using FilmesAPI.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace FilmesAPI
 {
@@ -13,6 +15,9 @@ namespace FilmesAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            var connectString = builder.Configuration["ConnectionStrings:UsuarioConnection"];
+            builder.Services.AddDbContext<FilmeContext>(opts => opts.UseMySQL(connectString));
 
             var app = builder.Build();
 
