@@ -17,7 +17,7 @@ namespace FilmesAPI
             builder.Services.AddSwaggerGen();
 
             var connectString = builder.Configuration["ConnectionStrings:UsuarioConnection"];
-            builder.Services.AddDbContext<AppDbContext>(opts => opts.UseMySQL(connectString));
+            builder.Services.AddDbContext<AppDbContext>(opts => opts.UseLazyLoadingProxies().UseMySQL(connectString));
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
