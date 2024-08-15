@@ -2,6 +2,7 @@
 using FilmesAPI.Models;
 using FilmesAPI.Data;
 using FilmesAPI.Data.Dtos;
+using AutoMapper;
 
 namespace FilmesAPI.Controllers
 {
@@ -9,23 +10,19 @@ namespace FilmesAPI.Controllers
     [Route("[controller]")]
     public class FilmeController : ControllerBase
     {
-        public FilmeController(FilmeContext context)
+        public FilmeController(FilmeContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         private FilmeContext _context;
+        private IMapper _mapper;
 
         [HttpPost]
         public IActionResult  CreateFilme ([FromBody] CreateFilmeDto filmeDto)
         {
-            Filme filme = new Filme()
-            {
-                Titulo = filmeDto.Titulo,
-                Diretor = filmeDto.Diretor,
-                Genero = filmeDto.Genero,
-                Duracao = filmeDto.Duracao,
-            };
+            Filme filme = _mapper.Map<Filme>(filmeDto);
 
             _context.Filmes.Add(filme);
             _context.SaveChanges();
@@ -46,15 +43,7 @@ namespace FilmesAPI.Controllers
             if (filme is null)
                 return NotFound("Filme não encontrado.");
 
-            ReadFilmeDto filmeDto = new ReadFilmeDto()
-            {
-                Id = filmeId,
-                Titulo = filme.Titulo,
-                Diretor = filme.Diretor,
-                Genero = filme.Genero,
-                Duracao = filme.Duracao,
-                HoraDaConsulta = DateTime.Now,
-            };
+            ReadFilmeDto filmeDto = _mapper.Map<ReadFilmeDto>(filme);
 
             return Ok(filmeDto);
         }
@@ -67,12 +56,8 @@ namespace FilmesAPI.Controllers
             if (filme is null)
                 return NotFound("Filme não encontrado.");
 
-            filme.Titulo = filmeDto.Titulo;
-            filme.Diretor = filmeDto.Diretor;
-            filme.Genero = filmeDto.Genero;
-            filme.Duracao = filmeDto.Duracao;
+            _mapper.Map(filmeDto, filme);
 
-            _context.Filmes.Update(filme);
             _context.SaveChanges();
 
             return NoContent();

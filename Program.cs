@@ -19,6 +19,8 @@ namespace FilmesAPI
             var connectString = builder.Configuration["ConnectionStrings:UsuarioConnection"];
             builder.Services.AddDbContext<FilmeContext>(opts => opts.UseMySQL(connectString));
 
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
