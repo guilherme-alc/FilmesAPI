@@ -10,13 +10,13 @@ namespace FilmesAPI.Controllers
     [Route("[controller]")]
     public class FilmeController : ControllerBase
     {
-        public FilmeController(FilmeContext context, IMapper mapper)
+        public FilmeController(AppDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
-        private FilmeContext _context;
+        private AppDbContext _context;
         private IMapper _mapper;
 
         [HttpPost]
