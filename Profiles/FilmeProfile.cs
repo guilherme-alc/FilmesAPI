@@ -10,7 +10,9 @@ namespace FilmesAPI.Profiles
         {
             CreateMap<CreateFilmeDto, Filme>();
             CreateMap<UpdateFilmeDto, Filme>();
-            CreateMap<Filme, ReadFilmeDto>();
+            CreateMap<Filme, ReadFilmeDto>()
+                .ForMember(dto => dto.HoraDaConsulta, opts => opts
+                .MapFrom(src => DateTime.Now));
         }
     }
 }

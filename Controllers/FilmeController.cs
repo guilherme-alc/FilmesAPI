@@ -30,9 +30,17 @@ namespace FilmesAPI.Controllers
             return CreatedAtAction(nameof(GetByIdFilme), new { filmeId = filme.Id }, filme);
         }
         [HttpGet]
-        public IEnumerable<Filme> GetFilmes()
+        public IActionResult GetFilmes([FromQuery] int? duracao = null)
         {
-            return _context.Filmes;
+            List<Filme> filmes;
+
+            if (duracao is null)
+                filmes = _context.Filmes.ToList();
+            else
+                filmes = _context.Filmes.Where(filme => filme.Duracao <= duracao).ToList();
+
+            List<ReadFilmeDto> filmesDto = _mapper.Map<List<ReadFilmeDto>>(filmes);
+            return Ok(filmesDto);
         }
 
         [HttpGet("{filmeId}")]
