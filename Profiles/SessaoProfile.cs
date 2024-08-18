@@ -11,8 +11,9 @@ namespace FilmesAPI.Profiles
             CreateMap<CreateSessaoDto, Sessao>();
             CreateMap<Sessao, ReadSessaoDto>()
                 .ForMember(dto => dto.HorarioDeInicio, opts => opts
-                .MapFrom(dto => dto.HorarioDeEncerramento
-                .AddMinutes(dto.Filme.Duracao * (-1))));
+                .MapFrom(dto => dto.Filme != null && dto.Filme.Duracao > 0
+                    ? dto.HorarioDeEncerramento.AddMinutes(-dto.Filme.Duracao)
+                    : (DateTime?)null));
         }
     }
 }

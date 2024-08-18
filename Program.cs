@@ -1,4 +1,5 @@
 using FilmesAPI.Data;
+using FilmesAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FilmesAPI
@@ -10,7 +11,11 @@ namespace FilmesAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
+            builder.Services.AddScoped<FilmeServices, FilmeServices>();
+            builder.Services.AddScoped<CinemaServices, CinemaServices>();
+            builder.Services.AddScoped<EnderecoServices, EnderecoServices>();
+            builder.Services.AddScoped<GerenteServices, GerenteServices>();
+            builder.Services.AddScoped<SessaoServices, SessaoServices>();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

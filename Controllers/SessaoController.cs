@@ -1,9 +1,6 @@
-﻿using AutoMapper;
+﻿using FilmesAPI.Data.Dtos.Sessao;
+using FilmesAPI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FilmesAPI.Data.Dtos.Sessao;
-using FilmesAPI.Models;
-using FilmesAPI.Data;
 
 namespace FilmesAPI.Controllers
 {
@@ -11,35 +8,26 @@ namespace FilmesAPI.Controllers
     [Route("[controller]")]
     public class SessaoController : ControllerBase
     {
-        private AppDbContext _context;
-        private IMapper _mapper;
+        private SessaoServices _sessaoService;
 
-        public SessaoController(AppDbContext context, IMapper mapper)
+        public SessaoController(SessaoServices sessaoService)
         {
-            _context = context;
-            _mapper = mapper;
+            _sessaoService = sessaoService;
         }
+
         [HttpPost]
-        public IActionResult AdicionaSessao(CreateSessaoDto sessaoDto)
+        public IActionResult AdicionaSessao(CreateSessaoDto dto)
         {
-            Sessao sessao = _mapper.Map<Sessao>(sessaoDto);
-            _context.Sessoes.Add(sessao);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(RecuperaSessoesPorId), new { Id = sessao.Id}, sessao);
+            ReadSessaoDto readDto = _sessaoService.AdicionaSessao(dto);
+            return CreatedAtAction(nameof(RecuperaSessoesPorId), new { Id = readDto.Id }, readDto);
         }
+
         [HttpGet("{id}")]
         public IActionResult RecuperaSessoesPorId(int id)
         {
-            Sessao sessao = _context.Sessoes.FirstOrDefault(sessao => sessao.Id == id);
-            if(sessao is null)
-                return NotFound("Sessão não encontrada.");
-            ReadSessaoDto sessaoDto = _mapper.Map<ReadSessaoDto>(sessao);
-            return Ok(sessaoDto);
-        }
-        [HttpGet]
-        public IEnumerable<ReadSessaoDto> RecuperaSessoes()
-        {
-            return _mapper.Map<List<ReadSessaoDto>>(_context.Sessoes.ToList());
+            ReadSessaoDto readDto = _sessaoService.RecuperaSessoesPorId(id);
+            if (readDto == null) return NotFound();
+            return Ok(readDto);
         }
     }
 }
